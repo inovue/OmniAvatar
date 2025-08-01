@@ -23,6 +23,7 @@ Zhejiang University, Alibaba Group
 ## Quickstart
 ### 🛠️Installation
 
+
 **System Requirements:**
 - Python 3.11 or higher
 - CUDA-compatible GPU (NVIDIA GPU with CUDA support)
@@ -42,6 +43,10 @@ cd OmniAvatar
 
 Install dependencies:
 ```
+# For local develop
+uv pip install -e .
+
+# For Prod
 pip install torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 --index-url https://download.pytorch.org/whl/cu124
 pip install -r requirements.txt
 # Optional to install flash_attn to accelerate attention computation
