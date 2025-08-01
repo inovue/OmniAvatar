@@ -1,0 +1,41 @@
+# Include the README and LICENSE files
+include README.md
+include LICENSE.txt
+include requirements.txt
+
+# Include configuration files
+include configs/*.yaml
+recursive-include configs *.yaml
+
+# Include examples but not large media files
+include examples/infer_samples.txt
+exclude examples/audios/*
+exclude examples/images/*
+
+# Include assets for documentation (but not large files)
+include assets/material/*.png
+exclude assets/material/*.jpg
+exclude assets/material/*.jpeg
+
+# Include package data
+recursive-include OmniAvatar *.py
+recursive-include OmniAvatar/configs *.yaml
+recursive-include OmniAvatar/configs *.json
+
+# Exclude unnecessary files
+exclude scripts/*
+exclude .gitignore
+exclude .git/*
+exclude *.pyc
+exclude __pycache__/*
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+
+# Exclude model weights and large files
+exclude pretrained_models/*
+recursive-exclude pretrained_models *
+
+# Exclude development files
+exclude .github/*
+exclude tests/*
+exclude docs/*

@@ -1,0 +1,112 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omniavatar"
+dynamic = ["version", "description"]
+authors = [
+    {name = "Qijun Gan", email = "ganqijun@zju.edu.cn"},
+    {name = "Ruizi Yang"},
+    {name = "Jianke Zhu"},
+    {name = "Shaofei Xue"},
+    {name = "Steven Hoi"}
+]
+license = {file = "LICENSE.txt"}
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Multimedia :: Sound/Audio",
+]
+keywords = [
+    "artificial intelligence",
+    "computer vision",
+    "video generation",
+    "avatar",
+    "audio-driven",
+    "deep learning",
+    "pytorch",
+    "diffusion models"
+]
+dependencies = [
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "torchaudio>=2.0.0",
+    "librosa>=0.10.0",
+    "tqdm",
+    "peft>=0.15.1",
+    "transformers>=4.30.0",
+    "scipy>=1.9.0",
+    "numpy>=1.20.0",
+    "xfuser>=0.4.0",
+    "ftfy",
+    "einops",
+    "pillow",
+    "huggingface-hub",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov",
+    "black",
+    "isort",
+    "flake8"
+]
+accelerate = [
+    "flash-attn"
+]
+
+[project.urls]
+Homepage = "https://omni-avatar.github.io/"
+Repository = "https://github.com/Omni-Avatar/OmniAvatar"
+Documentation = "https://omni-avatar.github.io/"
+"Bug Reports" = "https://github.com/Omni-Avatar/OmniAvatar/issues"
+"Paper" = "http://arxiv.org/abs/2506.18866"
+"HuggingFace 14B" = "https://huggingface.co/OmniAvatar/OmniAvatar-14B"
+"HuggingFace 1.3B" = "https://huggingface.co/OmniAvatar/OmniAvatar-1.3B"
+
+[tool.setuptools]
+packages = ["OmniAvatar"]
+
+[tool.setuptools.dynamic]
+version = {attr = "OmniAvatar.__version__"}
+description = {attr = "OmniAvatar.__description__"}
+
+[tool.setuptools.package-data]
+OmniAvatar = ["configs/*.yaml"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
