@@ -96,7 +96,7 @@ OmniAvatar
 torchrun --standalone --nproc_per_node=1 scripts/inference.py --config configs/inference.yaml --input_file examples/infer_samples.txt
 
 # 1.3B
-torchrun --standalone --nproc_per_node=1 scripts/inference.py --config configs/inference_1.3B.yaml --input_file examples/infer_samples.txt
+torchrun --standalone --nproc_per_node=1 scripts/inference.py --config configs/inference_1.3B.yaml --exp_path pretrained_models/OmniAvatar-1.3B --input_file examples/infer_samples.txt
 ```
 
 #### 💡Tips

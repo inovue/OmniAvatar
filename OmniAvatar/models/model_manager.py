@@ -5,7 +5,7 @@ from ..configs.model_config import model_loader_configs, huggingface_model_loade
 from ..utils.io_utils import load_state_dict, init_weights_on_device, hash_state_dict_keys, split_state_dict_with_prefix, smart_load_weights
 
 
-def load_model_from_single_file(state_dict, model_names, model_classes, model_resource, torch_dtype, device, infer):
+def load_model_from_single_file(state_dict, model_names, model_classes, model_resource, torch_dtype, device, infer, args=None):
     loaded_model_names, loaded_models = [], []
     for model_name, model_class in zip(model_names, model_classes):
         print(f"    model_name: {model_name} model_class: {model_class.__name__}")
@@ -21,6 +21,9 @@ def load_model_from_single_file(state_dict, model_names, model_classes, model_re
             model_state_dict, extra_kwargs = state_dict_results, {}
         torch_dtype = torch.float32 if extra_kwargs.get("upcast_to_float32", False) else torch_dtype
         with init_weights_on_device():
+            # Add args if WanModel class needs it
+            if model_class.__name__ == 'WanModel' and args is not None:
+                extra_kwargs['args'] = args
             model = model_class(**extra_kwargs)
         if hasattr(model, "eval"):
             model = model.eval()
@@ -143,7 +146,7 @@ class ModelDetectorFromSingleFile:
         keys_hash_with_shape = hash_state_dict_keys(state_dict, with_shape=True)
         if keys_hash_with_shape in self.keys_hash_with_shape_dict:
             model_names, model_classes, model_resource = self.keys_hash_with_shape_dict[keys_hash_with_shape]
-            loaded_model_names, loaded_models = load_model_from_single_file(state_dict, model_names, model_classes, model_resource, torch_dtype, device, infer)
+            loaded_model_names, loaded_models = load_model_from_single_file(state_dict, model_names, model_classes, model_resource, torch_dtype, device, infer, kwargs.get('args'))
             return loaded_model_names, loaded_models
 
         # Load models without strict matching
@@ -151,7 +154,7 @@ class ModelDetectorFromSingleFile:
         keys_hash = hash_state_dict_keys(state_dict, with_shape=False)
         if keys_hash in self.keys_hash_dict:
             model_names, model_classes, model_resource = self.keys_hash_dict[keys_hash]
-            loaded_model_names, loaded_models = load_model_from_single_file(state_dict, model_names, model_classes, model_resource, torch_dtype, device, infer)
+            loaded_model_names, loaded_models = load_model_from_single_file(state_dict, model_names, model_classes, model_resource, torch_dtype, device, infer, kwargs.get('args'))
             return loaded_model_names, loaded_models
 
         return loaded_model_names, loaded_models
@@ -283,7 +286,8 @@ class ModelManager:
         model_id_list: List = [],
         downloading_priority: List = ["ModelScope", "HuggingFace"],
         file_path_list: List[str] = [],
-        infer: bool = False
+        infer: bool = False,
+        args=None
     ):
         self.torch_dtype = torch_dtype
         self.device = device
@@ -291,6 +295,7 @@ class ModelManager:
         self.model_path = []
         self.model_name = []
         self.infer = infer
+        self.args = args
         downloaded_files = []
         self.model_detector = [
             ModelDetectorFromSingleFile(model_loader_configs),
@@ -304,7 +309,7 @@ class ModelManager:
         print(f"Loading models from file: {file_path}")
         if len(state_dict) == 0:
             state_dict = load_state_dict(file_path)
-        model_names, models = load_model_from_single_file(state_dict, model_names, model_classes, model_resource, self.torch_dtype, self.device, self.infer)
+        model_names, models = load_model_from_single_file(state_dict, model_names, model_classes, model_resource, self.torch_dtype, self.device, self.infer, self.args)
         for model_name, model in zip(model_names, models):
             self.model.append(model)
             self.model_path.append(file_path)
@@ -349,7 +354,8 @@ class ModelManager:
                 model_names, models = model_detector.load(
                     file_path, state_dict,
                     device=device, torch_dtype=torch_dtype,
-                    allowed_model_names=model_names, model_manager=self, infer=self.infer
+                    allowed_model_names=model_names, model_manager=self, infer=self.infer,
+                    args=self.args
                 )
                 for model_name, model in zip(model_names, models):
                     self.model.append(model)

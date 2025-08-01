@@ -122,7 +122,7 @@ class WanInferencePipeline(nn.Module):
         self.step = 0
 
         # Load models
-        model_manager = ModelManager(device="cpu", infer=True)
+        model_manager = ModelManager(device="cpu", infer=True, args=args)
         model_manager.load_models(
             [
                 args.dit_path.split(","),

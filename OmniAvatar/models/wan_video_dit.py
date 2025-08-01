@@ -6,7 +6,13 @@ from typing import Tuple, Optional
 from einops import rearrange
 from ..utils.io_utils import hash_state_dict_keys
 from .audio_pack import AudioPack
-from ..utils.args_config import args
+def get_global_args():
+    """Get global args safely"""
+    try:
+        from ..utils.args_config import args
+        return args
+    except ImportError:
+        return None
 from xfuser.core.distributed import (get_sequence_parallel_rank,
                                      get_sequence_parallel_world_size,
                                      get_sp_group)
@@ -271,6 +277,7 @@ class WanModel(torch.nn.Module):
         num_layers: int,
         has_image_input: bool,
         audio_hidden_size: int=32,
+        args=None,
     ):
         super().__init__()
         self.dim = dim
@@ -304,7 +311,7 @@ class WanModel(torch.nn.Module):
         if has_image_input:
             self.img_emb = MLP(1280, dim)  # clip_feature_dim = 1280
 
-        if 'use_audio' in args:
+        if args and hasattr(args, 'use_audio'):
             self.use_audio = args.use_audio
         else:
             self.use_audio = False
@@ -563,7 +570,8 @@ class WanModelStateDictConverter:
             }
         else:
             config = {}
-        if hasattr(args, "model_config"):
+        args = get_global_args()
+        if args and hasattr(args, "model_config"):
             model_config = args.model_config
             if model_config is not None:
                 config.update(model_config)        
