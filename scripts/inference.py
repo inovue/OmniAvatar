@@ -2,7 +2,6 @@ import subprocess
 import os, sys
 from glob import glob
 from datetime import datetime
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import math
 import random
 import librosa

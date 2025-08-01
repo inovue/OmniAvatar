@@ -137,9 +137,6 @@ dmypy.json
 *.iml
 *.ipr
 
-# VS Code
-.vscode/
-*.code-workspace
 
 # Sublime Text
 *.sublime-project

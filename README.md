@@ -23,6 +23,16 @@ Zhejiang University, Alibaba Group
 ## Quickstart
 ### 🛠️Installation
 
+**System Requirements:**
+- Python 3.11 or higher
+- CUDA-compatible GPU (NVIDIA GPU with CUDA support)
+- CUDA 11.8 or higher (for flash_attn acceleration)
+- At least 8GB VRAM (21GB+ recommended for 14B model)
+
+**Note:** For flash_attn installation, you need either:
+1. Pre-built wheels (recommended for most users)
+2. CUDA development environment (nvcc compiler)
+
 Clone the repo:
 
 ```
@@ -35,7 +45,7 @@ Install dependencies:
 pip install torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 --index-url https://download.pytorch.org/whl/cu124
 pip install -r requirements.txt
 # Optional to install flash_attn to accelerate attention computation
-pip install flash_attn
+pip install flash-attn --no-build-isolation --find-links https://github.com/Dao-AILab/flash-attention/releases
 ```
 
 ### 🧱Model Download
@@ -51,9 +61,12 @@ Download models using huggingface-cli:
 ``` sh
 mkdir pretrained_models
 pip install "huggingface_hub[cli]"
-huggingface-cli download Wan-AI/Wan2.1-T2V-14B --local-dir ./pretrained_models/Wan2.1-T2V-14B
+# huggingface-cli download Wan-AI/Wan2.1-T2V-14B --local-dir ./pretrained_models/Wan2.1-T2V-14B
+# huggingface-cli download OmniAvatar/OmniAvatar-14B --local-dir ./pretrained_models/OmniAvatar-14B
+# or 
+huggingface-cli download Wan-AI/Wan2.1-T2V-1.3B --local-dir ./pretrained_models/Wan2.1-T2V-1.3B
+huggingface-cli download OmniAvatar/OmniAvatar-1.3B --local-dir ./pretrained_models/OmniAvatar-1.3B
 huggingface-cli download facebook/wav2vec2-base-960h --local-dir ./pretrained_models/wav2vec2-base-960h
-huggingface-cli download OmniAvatar/OmniAvatar-14B --local-dir ./pretrained_models/OmniAvatar-14B
 ```
 
 #### File structure (Samples for 14B)
