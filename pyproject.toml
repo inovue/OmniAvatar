@@ -4,7 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "omniavatar"
-dynamic = ["version", "description"]
+version = "0.1.0"
+description = "Efficient Audio-Driven Avatar Video Generation with Adaptive Body Animation"
 authors = [
     {name = "Qijun Gan", email = "ganqijun@zju.edu.cn"},
     {name = "Ruizi Yang"},
@@ -80,10 +81,6 @@ Documentation = "https://omni-avatar.github.io/"
 
 [tool.setuptools]
 packages = ["OmniAvatar"]
-
-[tool.setuptools.dynamic]
-version = {attr = "OmniAvatar.__version__"}
-description = {attr = "OmniAvatar.__description__"}
 
 [tool.setuptools.package-data]
 OmniAvatar = ["configs/*.yaml"]
