@@ -1,0 +1,20 @@
+# OmniAvatar ComfyUI Nodes Requirements
+
+# Core dependencies
+torch>=2.0.0
+torchvision>=0.15.0
+numpy>=1.21.0
+
+# Model and training dependencies
+transformers>=4.30.0
+peft>=0.4.0
+
+# Audio processing
+librosa>=0.9.0
+soundfile>=0.12.0
+
+# Optional: Better performance and features
+accelerate>=0.20.0
+
+# Optional: Distributed processing (if needed)
+# xfuser  # Install separately if using distributed features
