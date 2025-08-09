@@ -13,9 +13,17 @@ Requirements:
 - CUDA GPU with 8GB+ VRAM recommended
 
 Installation:
+Automated Setup (Recommended):
+  python setup_comfyui.py
+
+Manual Installation:
 1. Clone OmniAvatar repository
 2. Install dependencies: pip install -r requirements.txt
-3. Place these nodes in ComfyUI custom_nodes directory
+3. Download models: python -m comfyui_nodes.installer.model_downloader --size 1.3B
+4. Place these nodes in ComfyUI custom_nodes directory
+
+For issues or advanced configuration, run:
+  python -m comfyui_nodes.installer.main_installer --help
 """
 
 import warnings
@@ -92,6 +100,27 @@ def print_startup_info():
     else:
         print("⚠ Dependency issues detected - see above for details")
         print("⚠ Nodes registered but may not function properly")
+        print()
+        print("🔧 To fix dependency issues, run:")
+        print("   python -m comfyui_nodes.installer.main_installer")
+        print("   or use the automated setup: python setup_comfyui.py")
+    
+    # Check for model availability
+    try:
+        from pathlib import Path
+        pretrained_models = Path(__file__).parent.parent / "pretrained_models"
+        if pretrained_models.exists():
+            model_dirs = [d for d in pretrained_models.iterdir() if d.is_dir()]
+            if model_dirs:
+                print(f"✓ Found {len(model_dirs)} model(s) in pretrained_models/")
+            else:
+                print("⚠ No models found in pretrained_models/ directory")
+                print("   Run: python -m comfyui_nodes.installer.model_downloader --size 1.3B")
+        else:
+            print("⚠ pretrained_models/ directory not found")
+            print("   Run automated setup: python setup_comfyui.py")
+    except Exception as e:
+        print(f"Could not check models: {e}")
     
     print(f"✓ Loaded {len(NODE_CLASS_MAPPINGS)} node(s)")
     print("="*60 + "\n")
